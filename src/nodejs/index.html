@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .wrapper{
+            background: palegreen;
+            overflow: hidden;
+        }
+
+        h1{
+            background: palegoldenrod;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <h1>Hello</h1>
+</div>
+
+    
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+    const socket = io()
+    socket.emit('join', 'Hello')
+
+    const h1 = document.querySelector('h1')
+    let margin = [50, 25]
+
+    updateCss();
+
+    socket.on('arduino', ({item, state}) => {
+        console.log('ARDUINO', item, state)
+
+        if(item === 'E1'){
+            if(state === '1'){
+                margin[0] += 5
+            }else{
+                margin[0] -= 5
+            }
+        }else
+        if(item === 'E2'){
+            if(state === '1'){
+                margin[1] += 5
+            }else{
+                margin[1] -= 5
+            }
+        }
+
+        updateCss()
+    })
+
+    function updateCss(){
+        h1.style.margin = margin.map(v => `${v}px`).join(' ')
+    }
+
+
+</script>
+
+</body>
+</html>
