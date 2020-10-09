@@ -40,13 +40,17 @@ class Button{
     }
 
     void press(){
-      Serial.println("Button #" + String(name)  +  " pressed");
+      //Serial.println("Button #" + String(name)  +  " pressed");
+      Serial.println(String(name)  +  ":0");
+      
       //Serial.println(&led->getName());
       this->led->on();
     }
 
     void release(){
-      Serial.println("Button #" + String(name)  +  " released");
+      //Serial.println("Button #" + String(name)  +  " released");
+      Serial.println(String(name)  +  ":1");
+      
       this->led->off();
     }
     
