@@ -48,6 +48,8 @@ Encoder e2("E2", ROT_B_DT, ROT_B_CLK);
 
 void setup() {
   Serial.begin (115200);
+  // start of transmission
+  Serial.write((byte)1);
 
   // On attache les led à chaque bouton, (ils décideront quoi faire avec plus tard)
   b1.setup(&l1);
@@ -58,7 +60,6 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(e1.getPinDT()), changementE1, CHANGE);
   attachInterrupt(digitalPinToInterrupt(e2.getPinDT()), changementE2, CHANGE);
 }
-
 
 String command;
                  

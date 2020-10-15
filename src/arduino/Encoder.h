@@ -51,7 +51,7 @@ class Encoder {
     
         //Serial.println("ROTARY #"+ String(name) +" value: " + String(value));
         if(left){
-          Serial.println(String(name)  +  ":0");
+          Serial.println(String(name)  +  ":-1");
         }else{
           Serial.println(String(name)  +  ":1");
         }

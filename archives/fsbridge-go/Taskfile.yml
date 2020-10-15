@@ -1,0 +1,15 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  build:
+    cmds:
+      - go build -o dist/fsbridge-go.exe
+    silent: false
+
+  run:
+    deps: [build]
+    dir: dist/
+    cmds:
+      - fsbridge-go.exe
