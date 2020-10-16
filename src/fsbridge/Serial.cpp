@@ -76,12 +76,32 @@ int Serial::read(const char *buffer, unsigned int buf_size) {
 bool Serial::readChar(char *c) {
    // DWORD bytesRead{};
     // ClearCommError(this->handler, &this->errors, &this->status);
-    memset((void*) c, 0, 1);
-    if (ReadFile(this->handler, (void*) c, 1, NULL, NULL)) {
-        return true;
+    //memset((void*) c, 0, 1);
+    //*c=0;
+    while(true) {
+        if (ReadFile(this->handler, (void *) c, 1, NULL, NULL)) {
+            //printf("%d\n",*c);
+            if (*c != 0) return true;
+        }
     }
     return false;
+}
 
+// read command
+// each command is separated by byte 0
+bool Serial::readCommand(std::string *cmd) {
+    char c;
+    while(true){
+        if (this->readChar(&c)){
+            if (c == 3 && cmd->length() > 0){
+                return true;
+            }
+            cmd->push_back(c);
+        } else {
+            break;
+        }
+    }
+    return false;
 }
 
 

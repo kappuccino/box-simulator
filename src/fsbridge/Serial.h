@@ -23,8 +23,10 @@ public:
 
     // read from serial
     int read(const char *buffer, unsigned int buf_size);
-    // read one byte
+    // read one char
     bool readChar(char *c);
+    // read command
+    bool readCommand(std::string *cmd);
     // write to serial
     bool write(const char *buffer, unsigned int buf_size);
     // connected ??
