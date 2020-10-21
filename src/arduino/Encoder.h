@@ -50,11 +50,14 @@ class Encoder {
         time = millis();
     
         //Serial.println("ROTARY #"+ String(name) +" value: " + String(value));
-        if(left){
-          Serial.println(String(name)  +  ":-1");
+        Serial.print(name);
+        Serial.write((byte)58);
+        if(left){    
+          Serial.write((byte)100); // d fo down
         }else{
-          Serial.println(String(name)  +  ":1");
+          Serial.write((byte)117); // u for up
         }
+        Serial.write((byte)3); // 3 -> end of text le byte 3
       } 
     
       // memorisation de l'état

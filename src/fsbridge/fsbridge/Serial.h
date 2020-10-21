@@ -1,3 +1,4 @@
+#pragma once
 //
 // Created by Toorop on 15/10/2020.
 //
@@ -18,17 +19,17 @@ private:
     DWORD errors;
 
 public:
-    explicit Serial(const char *portName);
+    explicit Serial(const char* portName);
     ~Serial();
 
     // read from serial
-    int read(const char *buffer, unsigned int buf_size);
+    int read(const char* buffer, unsigned int buf_size);
     // read one char
-    bool readChar(char *c);
+    bool readChar(char* c);
     // read command
-    bool readCommand(std::string *cmd);
+    bool readCommand(std::string* cmd);
     // write to serial
-    bool write(const char *buffer, unsigned int buf_size);
+    bool write(const char* buffer, unsigned int buf_size);
     // connected ??
     bool isConnected();
     // close serail com

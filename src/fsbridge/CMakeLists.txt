@@ -1,6 +1,0 @@
-cmake_minimum_required(VERSION 3.17)
-project(fsbridge)
-
-set(CMAKE_CXX_STANDARD 14)
-
-add_executable(fsbridge main.cpp Serial.cpp Serial.h)

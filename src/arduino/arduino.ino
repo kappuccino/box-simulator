@@ -34,39 +34,39 @@
 //
 
 // led
-Led l1("L1", LED_A);
-Led l2("L2", LED_B);
+//Led l1("L1", LED_A);
+//Led l2("L2", LED_B);
 
 // boutons
-Button b1("B1", BUT_A);
-Button b2("B2", BUT_B);
+//Button b1("B1", BUT_A);
+//Button b2("B2", BUT_B);
 
 // encoder rotatif
 Encoder e1("E1", ROT_A_DT, ROT_A_CLK);
-Encoder e2("E2", ROT_B_DT, ROT_B_CLK);
+//Encoder e2("E2", ROT_B_DT, ROT_B_CLK);
 
 
 void setup() {
   Serial.begin (115200);
   // start of transmission
-  Serial.write((byte)1);
+  //Serial.write((byte)1);
 
   // On attache les led à chaque bouton, (ils décideront quoi faire avec plus tard)
-  b1.setup(&l1);
-  b2.setup(&l2);
+  //b1.setup(&l1);
+  //b2.setup(&l2);
 
   // encoderA et encoderB sont des proxy pour lancer la fonction `changement` sur les instances
   // on ne peut pas attaquer ces methodes directement ici (limitation de attachInterrupt sur arduino)
   attachInterrupt(digitalPinToInterrupt(e1.getPinDT()), changementE1, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(e2.getPinDT()), changementE2, CHANGE);
+  //attachInterrupt(digitalPinToInterrupt(e2.getPinDT()), changementE2, CHANGE);
 }
 
 String command;
                  
 void loop(){
   
-  b1.loop();
-  b2.loop();
+  //b1.loop();
+  //b2.loop();
 
   if(Serial.available() > 0){
     char c = Serial.read();
@@ -78,9 +78,8 @@ void loop(){
   
       Serial.println("Response: \""+ component +"\":\"" + state + "\"");
 
-      l1.update(component, state);
-      l2.update(component, state);
-
+      //l1.update(component, state);
+      //l2.update(component, state);
       command = "";
     }else{
       command += c;
@@ -96,6 +95,6 @@ void changementE1(){
 }
 
 // Proxy pour e2.changement
-void changementE2(){
+/*void changementE2(){
   e2.changement();
-}
+}*/
