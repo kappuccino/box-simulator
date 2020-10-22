@@ -88,7 +88,7 @@ bool Serial::readChar(char *c) {
 }
 
 // read command
-// each command is separated by byte 0
+// each command is separated by byte 3
 bool Serial::readCommand(std::string *cmd) {
     char c;
     while(true){
