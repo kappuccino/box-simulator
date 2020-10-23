@@ -27,11 +27,11 @@ void Encoder::tick()
         // Si CLK different de l'ancien état de DT alors
         if (digitalRead(pinCLK) != prev)
         {
-            Serial.write((byte)100); // d for down
+            Serial.write((byte)117); // u for up
         }
         else
         {
-            Serial.write((byte)117); // u for up
+            Serial.write((byte)100); // d for down
         }
         Serial.write((byte)3); // 3 -> end of text le byte 3
         // memorisation du temps
