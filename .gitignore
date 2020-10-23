@@ -10,3 +10,8 @@
 /src/fsbridge/.vs/fsbridge/v16/Browse.VC.db
 /src/fsbridge/.vs/fsbridge/v16/.suo
 /src/fsbridge/.vs/fsbridge/v16/ipch/AutoPCH/b48019ce0e08446d/SERIAL.ipch
+src/fsbridge/.idea/
+src/arduino/.vscode/
+src/fsbridge/.vs/
+src/fsbridge/fsbridge/x64/
+src/fsbridge/x64/Release
