@@ -95,8 +95,10 @@ bool Serial::readCommand(std::string *cmd) {
         if (this->readChar(&c)){
             if (c == 3 && cmd->length() > 0){
                 return true;
+            }       
+            if (c >= 0) {
+                cmd->push_back(c);
             }
-            cmd->push_back(c);
         } else {
             break;
         }

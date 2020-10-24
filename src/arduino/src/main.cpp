@@ -6,12 +6,11 @@
 void tickE1();
 void tickE2();
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Définition des PIN physique //////////////////////////////////////////////////////////////////////////////////
 //
 
-// Encoder 1 (E1) 
+// Encoder 1 (E1)
 #define ROT_E1_CLK 22
 #define ROT_E1_DT 23
 #define ROT_E1_SW 24
@@ -40,7 +39,7 @@ void setup()
 
   // encoderA et encoderB sont des proxy pour lancer la fonction `changement` sur les instances
   // on ne peut pas attaquer ces methodes directement ici (limitation de attachInterrupt sur arduino)
-   attachInterrupt(digitalPinToInterrupt(e1.getPinDT()), tickE1, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(e1.getPinDT()), tickE1, CHANGE);
   attachInterrupt(digitalPinToInterrupt(e2.getPinDT()), tickE2, CHANGE);
 }
 
@@ -58,4 +57,3 @@ void tickE2()
 {
   e2.tick();
 }
-

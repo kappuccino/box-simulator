@@ -3,8 +3,8 @@
 #include "Serial.h"
 #include "SimConnect.h"
 
-bool quit {false};
-HANDLE hSimConnect {NULL};
+bool quit{ false };
+HANDLE hSimConnect{ NULL };
 
 const char* port = R"(\\.\COM3)";
 
@@ -51,6 +51,8 @@ struct Struct1
 static enum EVENT_ID {
 	EVENT_ALT_INC,
 	EVENT_ALT_DEC,
+	EVENT_VS_INC,
+	EVENT_VS_DEC,
 	EVENT_HEADING_BUG_INC,
 	SIM_START,
 	SIM_STOP,
@@ -92,11 +94,11 @@ void CALLBACK MyDispatchProc(SIMCONNECT_RECV* pData, DWORD  cbData, void* pConte
 		switch (pObjData->dwRequestID)
 		{
 
-		/*case REQ_ID:
-		{
-			printf("known request id: %ld\n", pObjData->dwRequestID);
-			break;
-		}*/
+			/*case REQ_ID:
+			{
+				printf("known request id: %ld\n", pObjData->dwRequestID);
+				break;
+			}*/
 
 		case REQUEST_1:
 		{
@@ -172,7 +174,7 @@ int main() {
 				{
 					std::cout << "Dispatcher detached" << std::endl;
 					return 0;
-				}				
+				}
 			}
 			Sleep(500);
 		}
@@ -182,10 +184,12 @@ int main() {
 		return 1;
 	}*/
 
-
+	// Altitude
 	result = SimConnect_MapClientEventToSimEvent(hSimConnect, EVENT_ALT_INC, "AP_ALT_VAR_INC");
 	result = SimConnect_MapClientEventToSimEvent(hSimConnect, EVENT_ALT_DEC, "AP_ALT_VAR_DEC");
-
+	// Vertical speed
+	result = SimConnect_MapClientEventToSimEvent(hSimConnect, EVENT_VS_INC, "AP_VS_VAR_INC");
+	result = SimConnect_MapClientEventToSimEvent(hSimConnect, EVENT_VS_DEC, "AP_VS_VAR_DEC");
 
 
 
@@ -203,22 +207,48 @@ int main() {
 			cmd.clear();
 			bool hasRead = serialConn->readCommand(&cmd);
 			if (hasRead) {
-				std::cout << '"' << cmd << '"' << std::endl;
+				std::cout << "RX: " << cmd << '"' << std::endl;
 
 				// parse command
-				int pos = cmd.find(':')+1;
+				int pos = cmd.find(':') + 1;
 
+				std::string sender = cmd.substr(0, static_cast<int>(pos - 1));
 				std::string action = cmd.substr(pos);
-				std::cout << "'"<< action << "'" << std::endl;
+
+				//std::cout << "sender: '"<< sender << "' action: '" << action << "'" << std::endl;
 
 				// exec command
-				if (action.compare("u")==0) {
-					result = SimConnect_TransmitClientEvent(hSimConnect, 0, EVENT_ALT_INC, 0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-				}
-				else
+				// todo: can't use switch with string
+
+				// encoder 1: vertical speed
+				if (sender == "E1")
 				{
-					result = SimConnect_TransmitClientEvent(hSimConnect, 0, EVENT_ALT_DEC, 0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+					if (action.compare("u") == 0) {
+						result = SimConnect_TransmitClientEvent(hSimConnect, 0, EVENT_VS_INC, 0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+					}
+					else
+					{
+						result = SimConnect_TransmitClientEvent(hSimConnect, 0, EVENT_VS_DEC, 0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+					}
 				}
+				// encoder 2: altitude
+				else if (sender == "E2") {
+					if (action.compare("u") == 0) {
+						result = SimConnect_TransmitClientEvent(hSimConnect, 0, EVENT_ALT_INC, 0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+					}
+					else
+					{
+						result = SimConnect_TransmitClientEvent(hSimConnect, 0, EVENT_ALT_DEC, 0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+					}
+				}
+
+				else {
+					std::cout << "Error unknox command - sender: '" << sender << "' action: '" << action << "'" << std::endl;
+				}
+
+
+
+
 				std::cout << "result from transmit event: " << result << std::endl;
 			}
 			else {
