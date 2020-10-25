@@ -77,7 +77,7 @@ bool Serial::readChar(char *c) {
    // DWORD bytesRead{};
     // ClearCommError(this->handler, &this->errors, &this->status);
     //memset((void*) c, 0, 1);
-    //*c=0;
+    *c=0;
     while(true) {
         if (ReadFile(this->handler, (void *) c, 1, NULL, NULL)) {
             //printf("%d\n",*c);

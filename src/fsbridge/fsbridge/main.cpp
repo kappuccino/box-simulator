@@ -51,9 +51,18 @@ struct Struct1
 static enum EVENT_ID {
 	EVENT_ALT_INC,
 	EVENT_ALT_DEC,
+	EVENT_ALT_HOLD,
 	EVENT_VS_INC,
 	EVENT_VS_DEC,
+	EVENT_VS_SELECT,
 	EVENT_HEADING_BUG_INC,
+	EVENT_HEADING_BUG_DEC,
+	EVENT_HEADING_BUG_HOLD,
+	EVENT_SPEED_INC,
+	EVENT_SPEED_DEC,
+	EVENT_SPEED_HOLD,
+	EVENT_ZOOM_IN,
+	EVENT_ZOOM_OUT,
 	SIM_START,
 	SIM_STOP,
 };
@@ -184,12 +193,31 @@ int main() {
 		return 1;
 	}*/
 
-	// Altitude
-	result = SimConnect_MapClientEventToSimEvent(hSimConnect, EVENT_ALT_INC, "AP_ALT_VAR_INC");
-	result = SimConnect_MapClientEventToSimEvent(hSimConnect, EVENT_ALT_DEC, "AP_ALT_VAR_DEC");
 	// Vertical speed
 	result = SimConnect_MapClientEventToSimEvent(hSimConnect, EVENT_VS_INC, "AP_VS_VAR_INC");
 	result = SimConnect_MapClientEventToSimEvent(hSimConnect, EVENT_VS_DEC, "AP_VS_VAR_DEC");
+	//result = SimConnect_MapClientEventToSimEvent(hSimConnect, EVENT_VS_SELECT, "VSI_BUG_SELECT");
+	//result = SimConnect_AddToDataDefinition(hSimConnect, DEFINITION_1, "AUTOPILOT VERTICAL HOLD VAR", "feet/minute");
+
+	// Altitude
+	result = SimConnect_MapClientEventToSimEvent(hSimConnect, EVENT_ALT_INC, "AP_ALT_VAR_INC");
+	result = SimConnect_MapClientEventToSimEvent(hSimConnect, EVENT_ALT_DEC, "AP_ALT_VAR_DEC");
+	result = SimConnect_MapClientEventToSimEvent(hSimConnect, EVENT_ALT_HOLD, "AP_PANEL_ALTITUDE_HOLD");
+
+	// heading
+	result = SimConnect_MapClientEventToSimEvent(hSimConnect, EVENT_HEADING_BUG_INC, "HEADING_BUG_INC");
+	result = SimConnect_MapClientEventToSimEvent(hSimConnect, EVENT_HEADING_BUG_DEC, "HEADING_BUG_DEC");
+	result = SimConnect_MapClientEventToSimEvent(hSimConnect, EVENT_HEADING_BUG_HOLD, "AP_PANEL_HEADING_HOLD");
+
+	// speed
+	result = SimConnect_MapClientEventToSimEvent(hSimConnect, EVENT_SPEED_INC, "AP_SPD_VAR_INC");
+	result = SimConnect_MapClientEventToSimEvent(hSimConnect, EVENT_SPEED_DEC, "AP_SPD_VAR_DEC");
+	result = SimConnect_MapClientEventToSimEvent(hSimConnect, EVENT_SPEED_HOLD, "KEY_AP_PANEL_SPEED_HOLD");
+
+	// zoom map
+	result = SimConnect_MapClientEventToSimEvent(hSimConnect, EVENT_ZOOM_IN, "GPS_ZOOMIN_BUTTON");
+	result = SimConnect_MapClientEventToSimEvent(hSimConnect, EVENT_ZOOM_OUT, "GPS_ZOOMOUT_BUTTON");
+
 
 
 
@@ -217,37 +245,86 @@ int main() {
 
 				//std::cout << "sender: '"<< sender << "' action: '" << action << "'" << std::endl;
 
-				// exec command
-				// todo: can't use switch with string
+				// exec commands
+				// can't use switch with string
 
 				// encoder 1: vertical speed
-				if (sender == "E1")
+				if (sender.compare("E1")==0)
 				{
 					if (action.compare("u") == 0) {
 						result = SimConnect_TransmitClientEvent(hSimConnect, 0, EVENT_VS_INC, 0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
 					}
+					else if (action.compare("d")==0) {
+						result = SimConnect_TransmitClientEvent(hSimConnect, 0, EVENT_VS_DEC, 0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+
+					}
+					/*
+					// vs hold
 					else
 					{
-						result = SimConnect_TransmitClientEvent(hSimConnect, 0, EVENT_VS_DEC, 0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
-					}
+						//SIMCONNECT_DATA
+						
+						int hold{ 2000 };
+						result = SimConnect_SetDataOnSimObject(hSimConnect, DEFINITION_1, SIMCONNECT_OBJECT_ID_USER, 0, 0, sizeof(hold),&hold);
+
+					}*/
 				}
 				// encoder 2: altitude
-				else if (sender == "E2") {
+				else if (sender.compare("E2")==0) {
 					if (action.compare("u") == 0) {
 						result = SimConnect_TransmitClientEvent(hSimConnect, 0, EVENT_ALT_INC, 0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
 					}
-					else
+					else if (action.compare("d")==0)
 					{
 						result = SimConnect_TransmitClientEvent(hSimConnect, 0, EVENT_ALT_DEC, 0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
 					}
+					else {
+						result = SimConnect_TransmitClientEvent(hSimConnect, 0, EVENT_ALT_HOLD, 0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+					}
 				}
 
+				// encoder 3: heading
+				else if (sender.compare("E3") == 0) {
+					if (action.compare("u") == 0) {
+						result = SimConnect_TransmitClientEvent(hSimConnect, 0, EVENT_HEADING_BUG_INC, 0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+					}
+					else if (action.compare("d") == 0) {
+						result = SimConnect_TransmitClientEvent(hSimConnect, 0, EVENT_HEADING_BUG_DEC, 0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+
+					}
+					else if (action.compare("b") == 0) {
+						result = SimConnect_TransmitClientEvent(hSimConnect, 0, EVENT_HEADING_BUG_HOLD, 0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+					}
+				}
+
+				// encoder 4: speed
+				else if (sender.compare("E4") == 0) {
+					if (action.compare("u") == 0) {
+						result = SimConnect_TransmitClientEvent(hSimConnect, 0, EVENT_SPEED_INC, 0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+					}
+					else if (action.compare("d") == 0) {
+						result = SimConnect_TransmitClientEvent(hSimConnect, 0, EVENT_SPEED_DEC, 0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+
+					}
+					else if (action.compare("b") == 0) {
+						result = SimConnect_TransmitClientEvent(hSimConnect, 0, EVENT_SPEED_HOLD, 0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+					}
+				}
+
+				// encoder 5: map zoom
+				else if (sender.compare("E5")) {
+					if (action.compare("u") == 0) {
+						result = SimConnect_TransmitClientEvent(hSimConnect, 0, EVENT_ZOOM_IN, 0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+					}
+					else if (action.compare("d") == 0) {
+						result = SimConnect_TransmitClientEvent(hSimConnect, 0, EVENT_ZOOM_OUT, 0, SIMCONNECT_GROUP_PRIORITY_HIGHEST, SIMCONNECT_EVENT_FLAG_GROUPID_IS_PRIORITY);
+					}
+				}
+
+				// default
 				else {
-					std::cout << "Error unknox command - sender: '" << sender << "' action: '" << action << "'" << std::endl;
+					std::cout << "Error unknow command - sender: '" << sender << "' action: '" << action << "'" << std::endl;
 				}
-
-
-
 
 				std::cout << "result from transmit event: " << result << std::endl;
 			}
