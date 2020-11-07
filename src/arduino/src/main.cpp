@@ -2,6 +2,7 @@
 #include "Led.h"
 #include "Button.h"
 #include "Encoder.h"
+#include <Keyboard.h>
 
 void tickE1();
 void tickE2();
@@ -50,15 +51,16 @@ const int ROT_E5_SW{36};
 unsigned long lastButtonPress = 0;
 
 // encodeurs rotatifs
-Encoder e1("E1", ROT_E1_DT, ROT_E1_CLK, ROT_E1_SW);
-Encoder e2("E2", ROT_E2_DT, ROT_E2_CLK, ROT_E2_SW);
-Encoder e3("E3", ROT_E3_DT, ROT_E3_CLK, ROT_E3_SW);
-Encoder e4("E4", ROT_E4_DT, ROT_E4_CLK, ROT_E4_SW);
-Encoder e5("E5", ROT_E5_DT, ROT_E5_CLK, ROT_E5_SW);
+Encoder e1("E1", ROT_E1_DT, ROT_E1_CLK, ROT_E1_SW, 101, 114, 116);
+Encoder e2("E1", ROT_E2_DT, ROT_E2_CLK, ROT_E2_SW, 121, 117, 105);
+Encoder e3("E1", ROT_E3_DT, ROT_E3_CLK, ROT_E3_SW, 111, 112, 113);
+Encoder e4("E1", ROT_E4_DT, ROT_E4_CLK, ROT_E4_SW, 115, 100, 102);
+Encoder e5("E1", ROT_E5_DT, ROT_E5_CLK, ROT_E5_SW, 225, 231, 227);
 
 void setup()
 {
-  Serial.begin(115200);
+  Keyboard.begin();
+  delay(2000);
 
   // encoderA et encoderB sont des proxy pour lancer la fonction `changement` sur les instances
   // on ne peut pas attaquer ces methodes directement ici (limitation de attachInterrupt sur arduino)
@@ -72,6 +74,10 @@ void setup()
 
 void loop()
 {
+
+  //Keyboard.print("Hello World");
+  //delay(1000);
+
   // Encoders buttons
   e1.btnClicked();
   e2.btnClicked();

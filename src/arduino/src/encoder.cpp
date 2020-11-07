@@ -3,7 +3,7 @@
 
 const unsigned long debounceTime = 50;
 
-Encoder::Encoder(const String name, byte pinDT, byte pinCLK, byte pinSW)
+Encoder::Encoder(const String name, byte pinDT, byte pinCLK, byte pinSW, uint8_t kup, uint8_t kdown, uint8_t kpressed)
 {
     this->name = name;
     this->pinDT = pinDT;
@@ -14,28 +14,30 @@ Encoder::Encoder(const String name, byte pinDT, byte pinCLK, byte pinSW)
     pinMode(pinDT, INPUT);
     pinMode(pinCLK, INPUT);
     pinMode(pinSW, INPUT_PULLUP);
+
+    // keyboard
+    this->keyboardKeyUp = kup;
+    this->keyboardKeyDown = kdown;
+    this->keyboardKeyPress = kpressed;
 }
 
 void Encoder::tick()
 {
     // on mesure PIN
-    byte read = digitalRead(pinDT);
+    byte read = digitalRead(pinDT);  
 
     // controle du temps pour eviter des erreurs
     if (millis() - time > debounceTime)
     {
-        Serial.print(name);
-        Serial.write(static_cast<byte>(58));
         // Si CLK different de l'ancien état de DT alors
         if (digitalRead(pinCLK) != prev)
         {
-            Serial.write(static_cast<byte>(117)); // u for up
+            presskey(keyboardKeyUp); // up
         }
         else
         {
-            Serial.write(static_cast<byte>(100)); // d for down
-        }
-        Serial.write(static_cast<byte>(3)); // 3 -> end of text le byte 3
+            presskey(keyboardKeyDown); // down; 
+        }               
         // memorisation du temps
         time = millis();
     }
@@ -49,10 +51,7 @@ void Encoder::btnClicked()
     {
         if (millis() - time > debounceTime)
         {
-            Serial.print(name);
-            Serial.write(static_cast<byte>(58));
-            Serial.write(static_cast<byte>(98)); // b for button
-            Serial.write(static_cast<byte>(3));
+            presskey(keyboardKeyPress);
         }
         time = millis();
     }
@@ -67,3 +66,12 @@ byte Encoder::getPinCLK()
 {
     return pinCLK;
 }
+
+// keyboard mod
+
+void Encoder::presskey(uint8_t k)
+{
+    Keyboard.press(k);
+    delayMicroseconds(50000);
+    Keyboard.release(k);
+};

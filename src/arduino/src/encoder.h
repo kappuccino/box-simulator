@@ -1,6 +1,8 @@
 #ifndef Encoder_h
 #define Encoder_h
 
+#include <Keyboard.h>
+
 class Encoder
 {
 private:
@@ -12,8 +14,15 @@ private:
   int value;
   unsigned long time;
 
+  // keyboard mod
+  uint8_t keyboardKeyUp;
+  uint8_t keyboardKeyDown;
+  uint8_t keyboardKeyPress;
+
+  void presskey(uint8_t);
+
 public:
-  Encoder(const String name, byte pinDT, byte pinCLK, byte pinSW);
+  Encoder(const String name, byte pinDT, byte pinCLK, byte pinSW, uint8_t, uint8_t, uint8_t);
 
   void tick();
 
