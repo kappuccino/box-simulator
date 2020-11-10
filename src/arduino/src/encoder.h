@@ -6,23 +6,19 @@
 class Encoder
 {
 private:
-  String name;
   byte pinDT;
   byte pinCLK;
   byte pinSW;
   byte prev;
-  int value;
   unsigned long time;
 
   // keyboard mod
-  uint8_t keyboardKeyUp;
-  uint8_t keyboardKeyDown;
-  uint8_t keyboardKeyPress;
+  uint8_t shortcuts[3][2];
 
-  void presskey(uint8_t);
+  void presskey(uint8_t *keys);
 
 public:
-  Encoder(const String name, byte pinDT, byte pinCLK, byte pinSW, uint8_t, uint8_t, uint8_t);
+  Encoder( byte pinDT, byte pinCLK, byte pinSW, uint8_t shortcuts[3][2]);
 
   void tick();
 
