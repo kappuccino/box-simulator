@@ -72,7 +72,8 @@ byte Encoder::getPinCLK()
 void Encoder::presskey(uint8_t keys[2])
 {
     Keyboard.press(keys[0]);
+    delayMicroseconds(10000);
     Keyboard.press(keys[1]);
-    delayMicroseconds(50000);
+    delayMicroseconds(100000);
     Keyboard.releaseAll();
 };
