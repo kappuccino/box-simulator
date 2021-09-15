@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "Led.h"
 #include "Button.h"
-#include "Encoder.h"
+#include "encoder.h"
 #include <Keyboard.h>
 
 void tickE1();

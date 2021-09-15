@@ -20,7 +20,6 @@ Encoder::Encoder(byte pinDT, byte pinCLK, byte pinSW, uint8_t shortcuts[3][2])
             this->shortcuts[i][j] = shortcuts[i][j];
         }
     };
-
 }
 
 void Encoder::tick()
