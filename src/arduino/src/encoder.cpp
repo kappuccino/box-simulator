@@ -1,7 +1,7 @@
 #include "Arduino.h"
 #include "encoder.h"
 
-const unsigned long debounceTime = 100;
+const unsigned long debounceTime = 150;
 
 Encoder::Encoder(byte pinDT, byte pinCLK, byte pinSW, uint8_t shortcuts[3][2])
 {
@@ -75,7 +75,7 @@ void Encoder::presskey(uint8_t keys[2])
     Keyboard.press(keys[0]);
     // delayMicroseconds(10000);
     Keyboard.press(keys[1]);
-    // delay(100);
+    delay(100);
     // delayMicroseconds(10000);
     Keyboard.releaseAll();
 };
