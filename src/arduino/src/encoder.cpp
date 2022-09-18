@@ -15,8 +15,10 @@ Encoder::Encoder(byte pinDT, byte pinCLK, byte pinSW, uint8_t shortcuts[3][2])
     pinMode(pinSW, INPUT_PULLUP);
 
     // keyboard shortcuts
-    for (int i=0; i < 3; i++){
-        for (int j = 0; j < 2; j++){
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 2; j++)
+        {
             this->shortcuts[i][j] = shortcuts[i][j];
         }
     };
@@ -25,7 +27,7 @@ Encoder::Encoder(byte pinDT, byte pinCLK, byte pinSW, uint8_t shortcuts[3][2])
 void Encoder::tick()
 {
     // on mesure PIN
-    byte read = digitalRead(pinDT);  
+    byte read = digitalRead(pinDT);
 
     // controle du temps pour eviter des erreurs
     if (millis() - time > debounceTime)
@@ -37,8 +39,8 @@ void Encoder::tick()
         }
         else
         {
-            presskey(shortcuts[1]); // down; 
-        }               
+            presskey(shortcuts[1]); // down;
+        }
         // memorisation du temps
         time = millis();
     }
@@ -71,8 +73,9 @@ byte Encoder::getPinCLK()
 void Encoder::presskey(uint8_t keys[2])
 {
     Keyboard.press(keys[0]);
-    delayMicroseconds(10000);
+    // delayMicroseconds(10000);
     Keyboard.press(keys[1]);
-    delayMicroseconds(100000);
+    // delay(100);
+    // delayMicroseconds(10000);
     Keyboard.releaseAll();
 };
