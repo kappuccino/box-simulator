@@ -10,6 +10,7 @@ private:
   byte pinCLK;
   byte pinSW;
   byte prev;
+  bool tickedOnce;
   unsigned long time;
 
   // keyboard mod
@@ -18,7 +19,7 @@ private:
   void presskey(uint8_t *keys);
 
 public:
-  Encoder( byte pinDT, byte pinCLK, byte pinSW, uint8_t shortcuts[3][2]);
+  Encoder(byte pinDT, byte pinCLK, byte pinSW, uint8_t shortcuts[3][2]);
 
   void tick();
 

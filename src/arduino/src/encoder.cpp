@@ -1,7 +1,7 @@
 #include "Arduino.h"
 #include "encoder.h"
 
-const unsigned long debounceTime = 150;
+const unsigned long debounceTime = 100;
 
 Encoder::Encoder(byte pinDT, byte pinCLK, byte pinSW, uint8_t shortcuts[3][2])
 {
@@ -10,6 +10,7 @@ Encoder::Encoder(byte pinDT, byte pinCLK, byte pinSW, uint8_t shortcuts[3][2])
     this->pinSW = pinSW;
     this->prev = digitalRead(pinDT);
     this->time = millis(); // debounce
+    this->tickedOnce = false;
     pinMode(pinDT, INPUT);
     pinMode(pinCLK, INPUT);
     pinMode(pinSW, INPUT_PULLUP);
@@ -26,7 +27,12 @@ Encoder::Encoder(byte pinDT, byte pinCLK, byte pinSW, uint8_t shortcuts[3][2])
 
 void Encoder::tick()
 {
-    // on mesure PIN
+    if (!tickedOnce)
+    {
+        tickedOnce = true;
+        return;
+    }
+    //  on mesure PIN
     byte read = digitalRead(pinDT);
 
     // controle du temps pour eviter des erreurs
@@ -43,9 +49,10 @@ void Encoder::tick()
         }
         // memorisation du temps
         time = millis();
+
+        // memorisation de l'état
+        this->prev = read;
     }
-    // memorisation de l'état
-    this->prev = read;
 }
 
 void Encoder::btnClicked()
@@ -73,9 +80,9 @@ byte Encoder::getPinCLK()
 void Encoder::presskey(uint8_t keys[2])
 {
     Keyboard.press(keys[0]);
-    // delayMicroseconds(10000);
+    //    delayMicroseconds(10000);
+    //    delay(50);
     Keyboard.press(keys[1]);
-    delay(100);
-    // delayMicroseconds(10000);
+    delayMicroseconds(10000);
     Keyboard.releaseAll();
 };

@@ -51,11 +51,11 @@ const int ROT_E5_SW{36};
 unsigned long lastButtonPress = 0;
 
 uint8_t shortcuts[5][3][2] = {
-    {{179, 101}, {179, 114}, {179, 116}},
-    {{179, 121}, {179, 117}, {179, 105}},
-    {{179, 111}, {179, 112}, {179, 113}},
-    {{179, 115}, {179, 100}, {179, 102}},
-    {{179, 225}, {179, 231}, {179, 227}},
+    {{KEY_RIGHT_SHIFT, 169}, {KEY_RIGHT_SHIFT, 114}, {KEY_RIGHT_SHIFT, 116}},
+    {{KEY_RIGHT_SHIFT, 121}, {KEY_RIGHT_SHIFT, 117}, {KEY_RIGHT_SHIFT, 105}},
+    {{KEY_RIGHT_SHIFT, 111}, {KEY_RIGHT_SHIFT, 112}, {KEY_RIGHT_SHIFT, 113}},
+    {{KEY_RIGHT_SHIFT, 115}, {KEY_RIGHT_SHIFT, 100}, {KEY_RIGHT_SHIFT, 102}},
+    {{KEY_RIGHT_SHIFT, 225}, {KEY_RIGHT_SHIFT, 231}, {KEY_RIGHT_SHIFT, 227}},
 };
 
 // encodeurs rotatifs
@@ -78,7 +78,7 @@ void setup()
 
 void loop()
 {
-  // Encoders buttons
+  //  Encoders buttons
   e1.btnClicked();
   e2.btnClicked();
   e3.btnClicked();
